@@ -1,0 +1,191 @@
+登录mysql：
+1、mysql -h localhost -P 3306 -u root -p(非自己的电脑)
+-h: 主机名；-P：端口；-u:用户名；-p：密码；
+2、mysql -u root -p (mysq默认连接localhost和3306端口)
+3、mysql 命令：？（\?）显示帮助信息    exit（\q）退出mysql    lp(\h) 显示帮助信息    quit(\q)退出mysql    status（\s）获取mysql服务信息     use（\u）选择数据库，以库名作为参数；
+
+配置mysql：
+1、通过dos命令配置     set character_set_client = gbk;
+2、通过运行MySQLInstanceConfig.ext程序重新配置
+3、通过修改my.ini文件配置MySQL
+
+创建数据库：
+CREATE DATABASE [IF NOT EXITS] 库名（例如mydb1）
+
+查看数据库 ：
+1、查看服务器中的数据库：SHOW DATABASES;
+2、显示数据库创建语句： SHOW CREATE DATABASE 库名；
+3、删除数据库：DROP DATABASE[IF EXISTS] 库名；
+
+选择数据库：
+1、USE 库名；选择数据库；
+2、SELECT database(); 查看当前使用的数据库；
+
+数据表基本操作：
+CREATE TABLE 表名
+（
+fileld1  datatype(类型),
+fileld2  datatype,
+fileld3  datatype,
+）
+
+查看数据表：
+SHOW  tables；查看当前数据库中的所有表
+DESC  表名；查看数据结构
+SHOW  CREATE TABLE 表名；
+
+修改数据表：
+增加列:
+ALTER TABLE 表名 ADD colum datatype;(colum 代表添加的列名，datatype代表数据类型)
+修改列:
+ALTER TABLE 表名 MODIFY colum datatype;
+删除列：
+ALTER TABLE 表名 DROP cloum;
+修该表名：
+RENAME TABLE 表名 to 新表名；
+修改列：
+ALTER TABLE 表名 CHANGE 列名 新列名 datatype；
+删除数据表：
+DROP TABLE 表名；
+
+表的约束：
+PRIMARY KEY  主键约束，用于唯一表示对应的记录
+FOREIGN KEY  外键约束
+NOT NULL  非空约束
+UNIQUE  唯一性约束
+DEFAULT  默认值约束，用于设置字段的默认值；
+（表的约束条件都是对表中的字段进行约束，从而保证了表中数据的正确性与唯一性）；
+AUTO_INCREMENT; 字段值自动增加；
+
+添加数据：
+INSRET  INTO 表名
+          VALUES( value1,value2,value3....) 为表中的所有字段添加数据
+INSERT INTO 表名（colum1，colum2,colum3...）
+          VALUES(value1,value2,value3...)   为指定的字段添加数据
+更新数据：
+UPDATE 表名
+          SET col_name1=expr1[,col_name2=exp2...]
+          [WHERE where_definition]
+
+UPDATE table_name
+      SET password ="456789",birthday ="2015-05-05";
+
+将zhangsan 的密码改为123456.
+UPDATE users SET password =“123456”
+     WHERE username ="zhangsan"
+
+删除数据 ：
+DELETE   FROM  users；全部删除
+DELETE  FROM users
+     WHERE username="zhangsan";
+
+初始化数据表：
+truncate 表名；
+
+单表查询：
+SEKLECT语句：
+SELECT[DISTINCT]*|{colum1,colum2,colum3...}FROM 表名；
+
+查询所有字段：
+SELECT*FROM 表名；（*表示全部属性）
+SELECT username FROM users;
+SELECT username, password FROM users;
+查询指定字段：
+SELECT colum1,colum2,colum3...FROM 表名；
+查找username叫liubei的用户的所有信息：
+SELECT * FROM users
+  WHERE username='liubei';
+查找liubei的生日：
+SELECT birthday FROM users
+  WHERE username='liubei';
+查找也支持区间：
+查找语文成绩在50-100之间的。包括50和100；
+SELECT name FROM socres
+  WHERE chinese BETWEEN 50 AND 100;
+模糊查找：
+查找名字以张开头的人名;
+SELECT * FROM scores WHERE username LIKE '张%'
+%代表零个或多个任意字符， >_代表一个字符
+
+高级查询：
+COUNT（列名）返回某一列，行的总数:
+统计一个班级共有多少学生
+select count(*) from student;
+统计数学成绩大于70分的学生有多少个
+select count(*) from student student where math>70;
+统计总分大于250的人数有多少
+select count(*) from student where chinese+math+english > 230;
+
+SUM()函数返回满足where条件的行的和：
+统计一个班级数学总成绩
+select sum(math) from student;
+统计一个班级语文、英语、数学各科的总成绩
+select sum(chinese) as 语文,sum(english) as 英语,sum(math) as 数学 from student;
+统计一个班级语文、英语、数学的成绩总和
+select sum(chinese+math+english) from student;
+统计一个班级语文成绩平均分
+select sum(chinese)/count(*) from student;
+
+AUG()返回满足WHERE条件的一列的平均值：
+
+求所有学生的平均分
+select aug(math) from student;
+求所有学生的总分平均值
+select Aug（math+Chinese+English）from student；
+
+MAX()/MIN()函数返回满足WHERE条件的一列的最大/最小值：
+求所有学生成绩中英语的最高分
+select max(english) from student;
+求所有学生成绩中总分最高分
+select max(chinese+math+english) from student;
+求所有学生成绩中语文最低分
+select min(chinese) from student;
+
+对查询结果排序：
+SELECT colum1, colum2, colum3..
+    FROM table_name
+    ORDER BY colum ASC|DESC;
+（ASC 升序，DESC 降序）
+
+对数学成绩排序后输出
+select * from student order by math desc;
+对总分排序按从高到低的顺序输出
+select chinese+math+english as total from student order by total;
+对性李的学生成绩排序输出
+select name,chinese+math+english as total from student where name like '张%' order by total desc;、
+
+使用LIMT限制查询结果的数量：
+SELECT colum1,colum2,...
+               FROM 表名
+               LIMIT[OFFSET,]记录数
+
+为表区别名：
+SELECT 表别名.id,表别名.name,...FROM 表名 AS 表别名
+          WHERE 表别名.id=2... 
+为字段取别名：
+SELECT 字段名 AS 别名[,字段名[AS] 别名，...]FROM 表名；
+
+多表操作
+什么是外键
+为了保证数据的完整性，将两张表之间的数据建立关系，因此就需要在成绩表中添加外键约束。
+外键是指引用另一个表中的一列或多列，被引用的列应该具有主键约束或唯一约束。
+外键用于建立和加强两个表数据之间的链接。
+
+为表添加外键约束：
+创建表：
+CREATE TABLE department(
+    id INT PRIMARY KEY auto_increment,
+    name VARCHAR (20 ) NOT NULL
+);
+CREATE TABLE employee(
+    id INT PRIMARY KEY auto_increment,
+    name VARCHAR (20 ) NOT NULL,
+    dept_id INT ,
+    FOREIGN KEY (id) REFERENCES department(id)
+);
+
+表存在：
+ALTER TABLE 表名 ADD CONSTRAINT 外键名 FOREIGN KEY(外键字段名 ) REFERENCES 外表表名(主键字段名 );
+
+删除外键约束：
+ALTER TABLE 表名 DROP FOREIGN KEY 外键名
